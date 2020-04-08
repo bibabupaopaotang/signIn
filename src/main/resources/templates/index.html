@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script src="angular.js"></script>
+</head>
+<body>
+
+<div id="myApp" ng-app="myApp" ng-controller="myCtrl">
+
+    <img src="image/logo.png">
+    <div> Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input ng-model ="Name" /></div>
+    <div> Check Code:<input ng-model="code"/></div>
+    <div> <button ng-click="aaa()">签到</button></div>
+    <div ng-model="message"><p style="color: red">{{message}}</p></div>
+
+</div>
+<script>
+    var single = [[${team}]];
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function($scope, $http) {
+        $scope.count = 0;
+        $scope.aaa = function () {
+            $http({
+                method: "POST",
+                url: "http://123.57.29.247:9000/signIn",
+                data: JSON.stringify({name: $scope.Name, checkNum: $scope.code, teamId: single}),
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json"
+            }).then(function successCallback(response) {
+                if(response.data.status){
+                    $scope.message = "签到成功"+response.data.message;
+                }else{
+                    $scope.message = "签到失败"+response.data.message;
+                }
+            })
+        }
+    });
+</script>
+<style>
+    #myApp {
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+        margin-top: 60px;
+    }
+</style>
+</body>
+</html>
